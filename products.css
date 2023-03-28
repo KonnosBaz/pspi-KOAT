@@ -1,3 +1,10 @@
 /* BEGIN CODE HERE */
+.formTable1{
+    border-collapse: collapse;
+}
 
+.formThTd{
+    border: 1px solid black;
+    padding: 20px;
+}
 /* END CODE HERE */
