@@ -7,4 +7,57 @@
     border: 1px solid black;
     padding: 20px;
 }
+
+nav{
+    display: flex;
+    justify-content: space-between;
+    padding: 56px 20px 0px 20px; 
+}
+
+header{
+    height: 150px;
+    border: 1px solid black;
+}
+
+#inside_nav{
+    padding-top: 10px;
+}
+ a:hover {
+    color: rgb(14, 14, 14) !important;
+    background-color: rgb(239, 242, 161) !important;
+}
+
+a:visited{
+color :rgb(51, 6, 166)
+}
+
+#frame5{
+    position: relative;
+width: 1200px;
+padding: 50px;
+border: 1px solid black;
+margin: 7% 7% 7% 7%;
+}
+
+
+.inpuT{
+   display: flex;
+   padding-left:40px;
+    
+}
+#labels{
+    margin: 0px 40px;
+}
+.formLabel{
+margin-bottom:18px ;
+}
+
+.formIn{
+    margin-bottom:15px ;
+}
+#saveButton{
+    position: absolute;
+    right: 10px;
+}
+
 /* END CODE HERE */
