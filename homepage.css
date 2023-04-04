@@ -1,57 +1,10 @@
 /* BEGIN CODE HERE */
-.frame {
-    display: flex;
-    height: 400px;
-    width: 1200px;
-    margin-left: 50px;
-    margin-right: 50px;
-    margin-top: 20px;
-    margin-bottom: 20px;
-    align-self: center;
-}
 
-
-
-#frame3 {
-    height: 600px;
-}
-
-#img1 {
-    width: 600px;
-}
-
-#logo {
-    width: 250px;
-    height: 58px;
-}
-
-.small_img {
-    width: 300px;
-    height: 200px;
-}
-
-.img_txt {
-    display: flex;
-    width: 600px;
-}
-
-#l2 {
-    display: flex;
-}
-
-#l2 > div {
-    width: 300px;
-}
-
-iframe {
-    width: 1200px;
-    height: 600px;
-}
-
+/* --HEAD-- */
 header {
     display: flex;
     justify-content: center;
-    border-width: 2px;
+    border-width: 1px;
     border-top: 0px;
     border-left: 0px;
     border-right: 0px;
@@ -67,15 +20,52 @@ header {
     justify-content: space-between;
 }
 
+#logo {
+    width: 250px;
+    height: 58px;
+}
+
+a {
+    margin: 10px;
+}
+/* --HEAD-- */
+
+
 body {
     display: flex;
     flex-direction: column;
     justify-items: center;
     
 }
+.frame {
+    display: flex;
+    height: 400px;
+    width: 1200px;
+    margin-left: 50px;
+    margin-right: 50px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    align-self: center;
+}
 
-a {
-    margin: 20px;
+#frame3 {
+    height: 600px;
+}
+
+#img1 {
+    width: 600px;
+}
+
+
+
+.small_img {
+    width: 300px;
+    height: 200px;
+}
+
+.img_txt {
+    display: flex;
+    width: 600px;
 }
 
 .itxt {
@@ -90,6 +80,25 @@ a {
 
 #itxt2 {
     align-items: center;
+    margin: 20px;
+
+}
+
+p{
+    margin-right: 10px;
+}
+
+#l2 {
+    display: flex;
+}
+
+#l2 > div {
+    width: 300px;
+}
+
+iframe {
+    width: 1200px;
+    height: 600px;
 }
 
 footer {
