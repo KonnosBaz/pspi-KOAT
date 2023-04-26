@@ -2,23 +2,32 @@
 
 /* --HEAD-- */
 header {
-    display: flex;
-    justify-content: center;
+   
+    height: 150px;
     border-width: 1px;
     border-top: 0px;
     border-left: 0px;
     border-right: 0px;
     border-color: gray;
     border-style: solid;
+ 
+  
 }
-
+nav{
+    
+    display: flex;
+    justify-content: space-between;
+    padding: 56px 20px 0px 20px; 
+}
+/*
 #headdiv {
     width: 1200px;  
     height: 150px;
     display: flex;
-    align-items: center;
+    align-items: left;
     justify-content: space-between;
 }
+*/
 
 #logo {
     width: 250px;
