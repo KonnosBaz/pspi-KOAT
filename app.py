@@ -22,21 +22,22 @@ mongo = PyMongo(app)
 
 
 mongo.db.products.create_index([("name", TEXT)])
-
+#endpoint search δέχεται μια παραμέτρο την name ειναι το ονομα του προϊοντος που ψαχνουμε στην βαση
 
 @app.route("/search", methods=["GET"])
 def search():
     # BEGIN CODE HERE
-    name = request.args.get("name")
-    json=mongo.db.products.find({"$text":{"$search": name}}).sort("price",-1)
+    name = request.args.get("name")#μεθοδος για να παρουμε την τιμη της παραμέτρου απο το request
+    json=mongo.db.products.find({"$text":{"$search": name}}).sort("price",-1)#εδω πραγματοποιειται η αναζητηση στην βαση συμφωνα με την τιμη της παραμέτρου
+    #επιστρεφει το αντικειμενο cursor που περιλαμβανει το σύνολο των εγγραφων που ικανοποίουν την συνθηκη κατα φθινουσα σειρα
     
-    if json is None:
+    if json is None: #σε περιπτωση που ο cursor ειναι κενος γυρναει αδεια λιστα
         json=[]
         return json
     
     
     finale=[]
-    
+    #σε αντιθετη περιπτωση επιστρεψε μια λιστα απο json αρχεια/εγγραφες 
     for j in json:
         finale.append({'name':j['name'],
                        'production_year':j['production_year'],
@@ -54,49 +55,45 @@ def search():
     # END CODE HERE
 
 
+#end point add-product δεχεται ενα json αρχειο και ελεγχει αν υπαρχει αυτη η εγγραφη στην βαση.Αν υπαρχει την ενημερωνει ,αντιθετα την προσθετει 
+
+
+
 @app.route("/add-product", methods=["POST"])
 def add_product():
     # BEGIN CODE HERE
   
-    new=request.json
-   # name=new["name"]
-    #year=int(new["production_year"])
-    #price=int(new["price"])
-    #color=int(new["color"])
-    #size=int(new["size"])
+    new=request.json #παιρνω  το json αρχειο του request
+ 
 
     #elegxos eisodou
     if (new["color"]>3 or new["color"]<1) or(new["size"]<1 or new['size']>4):
         return "mistakes were made"
 
     
-    name=new["name"]
-    old=mongo.db.products.find_one({"$text":{"$search": f"\"{name}\""} })
+    name=new["name"] 
+    old=mongo.db.products.find_one({"$text":{"$search": f"\"{name}\""} }) #psaxno tin pleiada me to akribes onoma 
     
 
-    if old is None:
-     #   new["name"]=name
-      #  new["production_year"]=year
-       # new["price"]=price
-       # new["color"]=color
-        #new["size"]=size
-
+    if old is None:#an den brika kamia prostheto to json arxeio opws to pira apo to request 
         mongo.db.products.insert_one(new)
-    elif old is not None:
+    elif old is not None: #alliws enimerwno thn eggrafi ths basis
        mongo.db.products.update_one({"name":new["name"]},{"$set":{"price":new["price"],"production_year":new["production_year"],"color":new["color"],"size":new["size"]}})
         
-    return "addition is done"
+    return "addition is complete"
    
     # END CODE HERE
 
 
+#end point content-based-filtering δεχεται ενα json αρχειο και επιστρεφει τα ονοματα των εγγραφων που ταιριαζουν με αυτην κατα 70 τοις εκατο και πανω
+
 @app.route("/content-based-filtering", methods=["POST"])
 def content_based_filtering():
     # BEGIN CODE HERE
-     input=request.json
+     input=request.json#παιρνω το json apo to request
 
-     allMyProducts=mongo.db.products.find()
-     inputArray= [input["production_year"],  input['price'],input['color'], input['size']]
+     allMyProducts=mongo.db.products.find()#γυρναω όλες τις εγγραφες της βασης (φαση select *)
+     inputArray= [input["production_year"],  input['price'],input['color'], input['size']]#παιρνω τα χαρακτηριστικα που θα χρησιμοποιησω ως κριτηρια ομοιοτητας
      inputArray=np.array(inputArray)#1 by 4 array
                       
    
@@ -106,15 +103,15 @@ def content_based_filtering():
      paralerArray=[]
 
 
-     for j in allMyProducts:
+     for j in allMyProducts: #καθε πλειαδα που επιστεψε το find την κανω λιστα και την προσθετω σε μια αλλη λιστα (δημιουργω μια δισδιαστατη λιστα)
+           #παραλληλα κανω και μια εξτρα λιστα παραλληλη που κραταει τα ονοματα της δισδιαστατης λιστας
            paralerArray.append(j["name"])
            theListOfAllMyProducts.append([
                        j["production_year"],
                        j['price'],
                        j['color'],
                        j['size']  
-                       ]
-                       )
+                       ]   )
 
      NameArray=np.array(paralerArray)#n by 1
      ProductsArray=np.array(theListOfAllMyProducts) #n by 4
@@ -124,7 +121,7 @@ def content_based_filtering():
      
 
          
-
+    #το προβλημα στην μεθοδο ειναι η κανονικοποιηση της παραμέτρου production-year (αν κανω την κανονικοποιηση ιδιες εγγραφες εχουν 1.0...02 ποσοστο ομοιοτητας )
 
      #max=np.max(ProductsArray[:,0])
      #if (max<inputArray[0]):
@@ -135,15 +132,18 @@ def content_based_filtering():
 
 
 
-     above=np.dot(ProductsArray,inputArray.T)
+     above=np.dot(ProductsArray,inputArray.T) #παραγει εναν πινακα n by 1 ειναι τα n εσωτερικα γινόμενα των διανυσματων 
 
-
-
-
-
+    #υπολογίζω τα μετρα των διανυσματων και το γινομενο τους
      magnitudeOfA=np.sqrt(np.sum(np.square(ProductsArray),axis=1))
      magnitudeOfB=np.sqrt(np.sum(np.square(inputArray)))
+   
+   
+   
+
      below=magnitudeOfA*magnitudeOfB
+
+
 
 
      resultArray=above/below
@@ -152,8 +152,13 @@ def content_based_filtering():
 
     
      #resultArray=np.concatenate((resultArray, NameArray), axis=0)
-     listOfReturnedNames=[]
+     
+     #κολλαω τους δυο παραλληλους πινακες (τα ονοματα και τα αντιστοιχα ποσοστα ομοιοτητας)
      resultArray = np.column_stack((resultArray, NameArray))
+
+
+     #εδω αποθηκευω τα ονοματα που ικανοποιουν την συνθηκη
+     listOfReturnedNames=[]
      for i in resultArray:
          if float(i[0])>0.70:
              listOfReturnedNames.append(i[1])
