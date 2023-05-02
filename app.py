@@ -40,6 +40,7 @@ def search():
     #σε αντιθετη περιπτωση επιστρεψε μια λιστα απο json αρχεια/εγγραφες 
     for j in json:
         finale.append({'name':j['name'],
+                       'id':j["id"],
                        'production_year':j['production_year'],
                        'price':j['price'],
                        'color':j['color'],
@@ -78,7 +79,7 @@ def add_product():
     if old is None:#an den brika kamia prostheto to json arxeio opws to pira apo to request 
         mongo.db.products.insert_one(new)
     elif old is not None: #alliws enimerwno thn eggrafi ths basis
-       mongo.db.products.update_one({"name":new["name"]},{"$set":{"price":new["price"],"production_year":new["production_year"],"color":new["color"],"size":new["size"]}})
+       mongo.db.products.update_one({"name":new["name"]},{"$set":{"id":new["id"],"price":new["price"],"production_year":new["production_year"],"color":new["color"],"size":new["size"]}})
         
     return "addition is complete"
    
@@ -114,32 +115,50 @@ def content_based_filtering():
                        ]   )
 
      NameArray=np.array(paralerArray)#n by 1
+     
      ProductsArray=np.array(theListOfAllMyProducts) #n by 4
-
+     
 
          
      
 
          
-    #το προβλημα στην μεθοδο ειναι η κανονικοποιηση της παραμέτρου production-year (αν κανω την κανονικοποιηση ιδιες εγγραφες εχουν 1.0...02 ποσοστο ομοιοτητας )
+    
 
-     #max=np.max(ProductsArray[:,0])
-     #if (max<inputArray[0]):
-         #max=inputArray[0]
+     
+     
+    #διαδικασία κανονικοποίησης
+     debug=[]
 
-     #ProductsArray[:,0] = (ProductsArray[:,0] /max)
-     #inputArray[0]/=max 
+    
+    
+     for i in range(0,4):
+         max=np.max(ProductsArray[:,i])
+         if (max<inputArray[i]):
+            max=inputArray[i]
 
+          
 
+         for j in range(0,np.shape(ProductsArray)[0]):
+             ProductsArray[j][i]=ProductsArray[j][i]/max
+             
+              
+            
+        
+         x=inputArray[i]/max
+         inputArray[i]=x
+         debug.append(x)
+           
+              
 
+     inputArray=np.array(debug)
      above=np.dot(ProductsArray,inputArray.T) #παραγει εναν πινακα n by 1 ειναι τα n εσωτερικα γινόμενα των διανυσματων 
 
     #υπολογίζω τα μετρα των διανυσματων και το γινομενο τους
      magnitudeOfA=np.sqrt(np.sum(np.square(ProductsArray),axis=1))
      magnitudeOfB=np.sqrt(np.sum(np.square(inputArray)))
-   
-   
-   
+     
+    
 
      below=magnitudeOfA*magnitudeOfB
 
@@ -159,6 +178,9 @@ def content_based_filtering():
 
      #εδω αποθηκευω τα ονοματα που ικανοποιουν την συνθηκη
      listOfReturnedNames=[]
+
+
+     
      for i in resultArray:
          if float(i[0])>0.70:
              listOfReturnedNames.append(i[1])
@@ -170,11 +192,13 @@ def content_based_filtering():
 
      resultArray=list(resultArray)
 
-    
+     
+     
+     
 
 
 
-     return listOfReturnedNames
+     return (listOfReturnedNames)
     # END CODE HERE
 
 
