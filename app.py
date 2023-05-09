@@ -13,7 +13,7 @@ from selenium.webdriver.common.by import By
 # END CODE HERE
 
 app = Flask(__name__)
-app.config["MONGO_URI"] = "mongodb://localhost:27017/pspi"
+app.config["MONGO_URI"] = "mongodb://127.0.0.1:27017/pspi"
 CORS(app)
 mongo = PyMongo(app)
 
