@@ -210,17 +210,20 @@ def crawler():
         semester=request.args.get("semester")
         url="https://qa.auth.gr/el/x/studyguide/600000438/current"
         options=Options()
-        options.headless=False
+        options.headless=True
 
         driver = webdriver.Chrome(options=options)
-
+        
         driver.get(url)
-        courses = driver.find_element(By.ID,"exam"+semester)
+        courses = driver.find_elements(By.XPATH,"//table[@id='exam{}']/tbody/tr".format(semester))
         result=[]
-        for i in courses:
-            result.append(i)
+        for course in courses:
+            c=course.get_attribute("coursetitle")
+            result.append(c)
+        
         return jsonify(result)
 
      except Exception as e:
+         return str(e)
          return "BAD REQUEST", 400
     # END CODE HERE
