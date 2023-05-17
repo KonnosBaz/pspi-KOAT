@@ -47,6 +47,8 @@ searchButtonOnClick = () => {
     // END CODE HERE
 }
 
+
+
 productFormOnSubmit = (event) => {
     // BEGIN CODE HERE
     
@@ -64,7 +66,7 @@ productFormOnSubmit = (event) => {
     res.onreadystatechange = () => {
         if (res.readyState == 4) {
             if (res.status == 200) {
-                alert(res.responseText);
+                alert("OK");
             }
         }
     };
@@ -73,13 +75,14 @@ productFormOnSubmit = (event) => {
     
 
     res.send(JSON.stringify({
-        "id" : `Uhh... not sure`,
         "name": `${name.value}`,
         "production_year": Number(year.value),
         "price": Number(price.value),
         "color": Number(color.value),
         "size": Number(size.value)
-     }));
+    }));
+
+    
     // END CODE HERE
 }
 
