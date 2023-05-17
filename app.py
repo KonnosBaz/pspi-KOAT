@@ -40,7 +40,7 @@ def search():
     #σε αντιθετη περιπτωση επιστρεψε μια λιστα απο json αρχεια/εγγραφες 
     for j in json:
         finale.append({'name':j['name'],
-                       'id':j["id"],
+                       'id':str(j["_id"]),
                        'production_year':j['production_year'],
                        'price':j['price'],
                        'color':j['color'],
@@ -79,7 +79,7 @@ def add_product():
     if old is None:#an den brika kamia prostheto to json arxeio opws to pira apo to request 
         mongo.db.products.insert_one(new)
     elif old is not None: #alliws enimerwno thn eggrafi ths basis
-       mongo.db.products.update_one({"name":new["name"]},{"$set":{"id":new["id"],"price":new["price"],"production_year":new["production_year"],"color":new["color"],"size":new["size"]}})
+       mongo.db.products.update_one({"name":new["name"]},{"$set":{"price":new["price"],"production_year":new["production_year"],"color":new["color"],"size":new["size"]}})
         
     return "addition is complete"
    
@@ -210,17 +210,20 @@ def crawler():
         semester=request.args.get("semester")
         url="https://qa.auth.gr/el/x/studyguide/600000438/current"
         options=Options()
-        options.headless=False
+        options.headless=True
 
         driver = webdriver.Chrome(options=options)
-
+        
         driver.get(url)
-        courses = driver.find_element(By.ID,"exam"+semester)
+        courses = driver.find_elements(By.XPATH,"//table[@id='exam{}']/tbody/tr".format(semester))
         result=[]
-        for i in courses:
-            result.append(i)
+        for course in courses:
+            c=course.get_attribute("coursetitle")
+            result.append(c)
+        
         return jsonify(result)
 
      except Exception as e:
+         return str(e)
          return "BAD REQUEST", 400
     # END CODE HERE
