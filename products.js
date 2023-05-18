@@ -66,7 +66,7 @@ productFormOnSubmit = (event) => {
     res.onreadystatechange = () => {
         if (res.readyState == 4) {
             if (res.status == 200) {
-                alert("OK");
+                alert(res.responseText);
             }
         }
     };
