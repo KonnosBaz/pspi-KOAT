@@ -226,4 +226,6 @@ def crawler():
      except Exception as e:
          return str(e)
          return "BAD REQUEST", 400
+     
+     app.run
     # END CODE HERE
