@@ -10,28 +10,50 @@ window.onload = () => {
     // END CODE HERE
 }
 
+
+
 searchButtonOnClick = () => {
     // BEGIN CODE HERE
+
     const name = document.getElementById("searchField");
-    // alert(getContinent.value);
+    const table = document.getElementById("resultsTable");
     
+    l = table.rows.length
+
+    for (var i = 1 ; i<l ; i++){
+        table.deleteRow(-1);
+    }
     
     const res = new XMLHttpRequest();
     res.open("GET", `${api}/search?name=${name.value}`);
     res.onreadystatechange = () => {
         if (res.readyState == 4) {
             if (res.status == 200) {
-                console.log(res.responseText);
+                const results = JSON.parse(res.response);
+                
+                if (results.length >= 1) {
+                    for (r in results){
+                        makeRow(table,results[r]);
+                    }
+                }
+                else {
+                    makeEmptyRow(table);
+                }
+                
             }
         }
     };
-    res.send()
-    
+    res.send();    
     // END CODE HERE
 }
 
+
+
 productFormOnSubmit = (event) => {
     // BEGIN CODE HERE
+    
+    
+
     const name= document.getElementById("NAME");
     const year= document.getElementById("YEAR");
     const price = document.getElementById("PRICE");
@@ -48,16 +70,63 @@ productFormOnSubmit = (event) => {
             }
         }
     };
-    // same for the project 
+    
     res.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-    // change input (inside the JSON stringify)for the project
+    
+
     res.send(JSON.stringify({
-        "id" : `Uhh... not sure`,
         "name": `${name.value}`,
         "production_year": Number(year.value),
         "price": Number(price.value),
         "color": Number(color.value),
         "size": Number(size.value)
-     }));
+    }));
+
+    
     // END CODE HERE
+}
+
+makeRow = (table,x) => {
+    row = table.insertRow();
+    cell = row.insertCell(-1);
+    cell.classList.add("formThTd");
+    cell.innerHTML = x.id;
+    cell = row.insertCell(-1);
+    cell.classList.add("formThTd");
+    cell.innerHTML = x.name;
+    cell = row.insertCell(-1);
+    cell.classList.add("formThTd");
+    cell.innerHTML = x.production_year;
+    cell = row.insertCell(-1);
+    cell.classList.add("formThTd");
+    cell.innerHTML = x.price;
+    cell = row.insertCell(-1);
+    cell.classList.add("formThTd");
+    cell.innerHTML = x.color;
+    cell = row.insertCell(-1);
+    cell.classList.add("formThTd");
+    cell.innerHTML = x.size;
+}
+
+
+makeEmptyRow = (table) => {
+    row = table.insertRow();
+    cell = row.insertCell(-1);
+    cell.classList.add("formThTd");
+
+    cell = row.insertCell(-1);
+    cell.classList.add("formThTd");
+
+    cell = row.insertCell(-1);
+    cell.classList.add("formThTd");
+
+    cell = row.insertCell(-1);
+    cell.classList.add("formThTd");
+
+    cell = row.insertCell(-1);
+    cell.classList.add("formThTd");
+    
+    cell = row.insertCell(-1);
+    cell.classList.add("formThTd");
+    
 }

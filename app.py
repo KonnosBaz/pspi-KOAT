@@ -27,8 +27,16 @@ mongo.db.products.create_index([("name", TEXT)])
 @app.route("/search", methods=["GET"])
 def search():
     # BEGIN CODE HERE
+    
     name = request.args.get("name")#μεθοδος για να παρουμε την τιμη της παραμέτρου απο το request
-    json=mongo.db.products.find({"$text":{"$search": name}}).sort("price",-1)#εδω πραγματοποιειται η αναζητηση στην βαση συμφωνα με την τιμη της παραμέτρου
+
+
+
+
+    
+
+    
+    json=mongo.db.products.find({"$text":{"$search":f"\"{name}\""}}).sort("price",-1)#εδω πραγματοποιειται η αναζητηση στην βαση συμφωνα με την τιμη της παραμέτρου
     #επιστρεφει το αντικειμενο cursor που περιλαμβανει το σύνολο των εγγραφων που ικανοποίουν την συνθηκη κατα φθινουσα σειρα
     
     if json is None: #σε περιπτωση που ο cursor ειναι κενος γυρναει αδεια λιστα
@@ -68,19 +76,33 @@ def add_product():
  
 
     #elegxos eisodou
-    if (new["color"]>3 or new["color"]<1) or(new["size"]<1 or new['size']>4):
-        return "mistakes were made"
+  
+    if  type(new["color"])==type(None):
+        return "\"Color\" field must be an integer"
+    elif type(new["size"])==type(None):
+        return " \"Size\" field must be an integer"
+    elif type(new["production_year"])==type(None):
+        return "\"Production year\" field must be an integer"
+    elif type(new["price"])==type(None):
+        return "\"Price\" field must be an integer"
+
+    if (new["color"]>3 or new["color"]<1):
+        return "The available colors options are 1,2,3"
+    elif(new["size"]<1 or new['size']>4):
+        return "The available size options are 1,2,3,4"
 
     
     name=new["name"] 
-    old=mongo.db.products.find_one({"$text":{"$search": f"\"{name}\""} }) #psaxno tin pleiada me to akribes onoma 
+    old=mongo.db.products.find_one({"name":name }) #psaxno tin pleiada me to akribes onoma 
     
 
-    if old is None:#an den brika kamia prostheto to json arxeio opws to pira apo to request 
+    if old is None :#an den brika kamia prostheto to json arxeio opws to pira apo to request 
         mongo.db.products.insert_one(new)
+        return"added new product"
     elif old is not None: #alliws enimerwno thn eggrafi ths basis
        mongo.db.products.update_one({"name":new["name"]},{"$set":{"price":new["price"],"production_year":new["production_year"],"color":new["color"],"size":new["size"]}})
-        
+       return "Product updated"
+    
     return "addition is complete"
    
     # END CODE HERE
