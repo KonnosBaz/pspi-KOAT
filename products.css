@@ -23,7 +23,7 @@
 
     max-width: 1200px;
     padding: 50px;
-    border: 1px solid black;
+    /*border: 1px solid black;*/
     margin: 7% 7% 7% 7%;
 }
 
@@ -58,7 +58,7 @@ header{
     position: relative;
 max-width: 1200px;
 padding: 50px;
-border: 1px solid black;
+/*border: 1px solid black;*/
 margin: 7% 7% 7% 7%;
 }
 
